@@ -9,13 +9,14 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-from optiseed.strategies import lhs_sample, sobol_sample
+from optiseed.strategies import greedy_farthest_sample, lhs_sample, sobol_sample
 
 
 def _method_registry() -> Dict[str, Callable[..., np.ndarray]]:
     return {
         "Sobol": sobol_sample,
         "Latin Hypercube": lhs_sample,
+        "Greedy Farthest": greedy_farthest_sample,
     }
 
 
@@ -43,6 +44,11 @@ def main() -> None:
     with st.expander("Advanced options", expanded=False):
         scramble = st.checkbox("Scramble (Sobol only)", value=True)
         lhs_strength = st.number_input("LHS strength", min_value=1, max_value=3, value=1, step=1)
+        lhs_optimize = st.selectbox("LHS optimize", [None, "random-cd"], index=0, format_func=lambda x: "None" if x is None else x)
+        lhs_nopt = st.number_input("LHS optimization iterations", min_value=1, max_value=200, value=10, step=1)
+        greedy_multiplier = st.number_input(
+            "Greedy candidate multiplier", min_value=10, max_value=200, value=50, step=5
+        )
 
     generate = st.button("Generate samples")
 
@@ -54,6 +60,11 @@ def main() -> None:
             kwargs["seed"] = seed if use_seed else None
         elif method_name == "Latin Hypercube":
             kwargs["strength"] = lhs_strength
+            kwargs["optimize"] = lhs_optimize
+            kwargs["n_optimize"] = lhs_nopt
+            kwargs["seed"] = seed if use_seed else None
+        elif method_name == "Greedy Farthest":
+            kwargs["candidate_multiplier"] = greedy_multiplier
             kwargs["seed"] = seed if use_seed else None
 
         try:

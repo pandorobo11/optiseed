@@ -7,7 +7,6 @@ from typing import Sequence, Tuple
 import numpy as np
 from scipy.stats import qmc
 
-
 Bounds = Sequence[Tuple[float, float]]
 
 
@@ -16,6 +15,7 @@ def lhs_sample(
     dims: int,
     *,
     strength: int = 1,
+    optimize: str | None = "random-cd",
     seed: int | None = None,
     bounds: Bounds | None = None,
 ) -> np.ndarray:
@@ -26,6 +26,9 @@ def lhs_sample(
         n: Number of samples to draw.
         dims: Dimensionality of the search space.
         strength: Sample strength (1 = standard LHS). See scipy.stats.qmc docs.
+        optimize: Optional optimization method name for space-filling improvement
+            (e.g., "random-cd"). Passed to scipy.stats.qmc.LatinHypercube via the
+            constructor.
         seed: Optional RNG seed for reproducibility.
         bounds: Optional sequence of (low, high) bounds per dimension. If
             provided, its length must equal `dims`.
@@ -45,7 +48,12 @@ def lhs_sample(
     if bounds is not None and len(bounds) != dims:
         raise ValueError("bounds length must match dims")
 
-    sampler = qmc.LatinHypercube(d=dims, strength=strength, seed=seed)
+    sampler = qmc.LatinHypercube(
+        d=dims,
+        strength=strength,
+        seed=seed,
+        optimization=optimize,  # type: ignore[arg-type]
+    )
     samples = sampler.random(n)
 
     if bounds is None:

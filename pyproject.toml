@@ -13,5 +13,12 @@ dependencies = [
     "scipy",
 ]
 
+[project.optional-dependencies]
+gui = [
+    "streamlit",
+    "pandas",
+    "plotly",
+]
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/optiseed"]

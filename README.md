@@ -20,6 +20,11 @@ Seed generation utilities for optimization workflows (e.g., Bayesian optimizatio
   ```bash
   uv sync
   ```
+- GUI (Streamlit) optional dependencies:
+  ```bash
+  uv sync --extra gui
+  uv run streamlit run src/optiseed/gui/app.py
+  ```
 - Examples live under `examples/`:
   ```bash
   uv run python examples/sobol_demo.py

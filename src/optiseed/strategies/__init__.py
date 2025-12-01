@@ -1,6 +1,6 @@
 """Strategies for generating initial samples."""
 
-from .greedy import greedy_farthest_sample
+from .gfp import greedy_farthest_sample
 from .lhs import lhs_sample
 from .sobol import sobol_sample
 

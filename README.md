@@ -16,7 +16,12 @@ Seed generation utilities for optimization workflows (e.g., Bayesian optimizatio
   ```
 
 ## Development
-- Format/lint/test steps will be added as the codebase grows; for now you can run the default entrypoint:
+- Uses a `src/` layout; install dependencies and an editable build with:
   ```bash
-  uv run python main.py
+  uv sync
   ```
+- Examples live under `examples/`:
+  ```bash
+  uv run python examples/sobol_demo.py
+  ```
+- Format/lint/test steps will be added as the codebase grows.

@@ -28,6 +28,8 @@ Seed generation utilities for optimization workflows (e.g., Bayesian optimizatio
   ```bash
   uv sync --extra gui
   uv run streamlit run src/optiseed/gui/app.py
+  # or use the console script
+  uv run optiseed-gui
   ```
 - Examples live under `examples/`:
   ```bash

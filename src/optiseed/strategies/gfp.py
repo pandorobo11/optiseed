@@ -49,9 +49,14 @@ def greedy_farthest_sample(
     if bounds is not None and len(bounds) != dims:
         raise ValueError("bounds length must match dims")
 
-    candidate_size = max(n * candidate_multiplier, n + 1)
+    # Sobol balance properties require power-of-two sample sizes.
+    min_candidates = max(n * candidate_multiplier, n + 1)
+    power = int(np.ceil(np.log2(min_candidates)))
     sampler = qmc.Sobol(d=dims, scramble=True, seed=seed)
-    candidates = sampler.random(candidate_size)
+    candidates = sampler.random_base2(m=power)
+    # Trim if we generated more than needed.
+    if candidates.shape[0] > min_candidates:
+        candidates = candidates[:min_candidates]
 
     if bounds is not None:
         lower, upper = zip(*bounds)
